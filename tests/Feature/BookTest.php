@@ -68,7 +68,7 @@ test('destroy deletes book', function () {
     $this->assertDatabaseMissing('books', ['id' => $book->id]);
 });
 
-test('isbn must be unique', function () {
+test('isbn must be unique on create', function () {
     Book::factory()->create(['isbn' => '9789984380099']);
 
     $this->post(route('books.store'), [
@@ -76,4 +76,31 @@ test('isbn must be unique', function () {
         'isbn' => '9789984380099',
         'available_copies' => 1,
     ])->assertSessionHasErrors(['isbn']);
+});
+
+test('isbn must be unique on update', function () {
+    Book::factory()->create(['isbn' => '9789984380099']);
+    $book = Book::factory()->create(['isbn' => '9789984380088']);
+
+    $this->put(route('books.update', $book), [
+        'title' => $book->title,
+        'isbn' => '9789984380099',
+        'available_copies' => $book->available_copies,
+    ])->assertSessionHasErrors(['isbn']);
+});
+
+test('store rejects negative copies', function () {
+    $this->post(route('books.store'), [
+        'title' => 'Testa grāmata',
+        'isbn' => '9789984380099',
+        'available_copies' => -1,
+    ])->assertSessionHasErrors(['available_copies']);
+});
+
+test('index paginates', function () {
+    Book::factory()->count(15)->create();
+
+    $this->get(route('books.index'))
+        ->assertStatus(200)
+        ->assertViewHas('books');
 });

@@ -51,11 +51,21 @@ test('destroy deletes reader', function () {
     $this->assertDatabaseMissing('readers', ['id' => $reader->id]);
 });
 
-test('email must be unique', function () {
+test('email must be unique on create', function () {
     Reader::factory()->create(['email' => 'janis@test.lv']);
 
     $this->post(route('readers.store'), [
         'name' => 'Vēlviens',
         'email' => 'janis@test.lv',
+    ])->assertSessionHasErrors(['email']);
+});
+
+test('email must be unique on update', function () {
+    Reader::factory()->create(['email' => 'jana@test.lv']);
+    $reader = Reader::factory()->create(['email' => 'peteris@test.lv']);
+
+    $this->put(route('readers.update', $reader), [
+        'name' => 'Cits',
+        'email' => 'jana@test.lv',
     ])->assertSessionHasErrors(['email']);
 });

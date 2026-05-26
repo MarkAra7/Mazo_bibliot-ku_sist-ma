@@ -14,7 +14,7 @@ class BookFactory extends Factory
         return [
             'title' => fake()->sentence(3),
             'isbn' => fake()->unique()->isbn13(),
-            'available_copies' => fake()->numberBetween(0, 10),
+            'available_copies' => fake()->numberBetween(1, 10),
         ];
     }
 }

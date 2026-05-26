@@ -101,3 +101,38 @@ test('destroy deletes borrowing', function () {
 
     $this->assertDatabaseMissing('borrowings', ['id' => $borrowing->id]);
 });
+
+test('destroy restores copies when not returned', function () {
+    $book = Book::factory()->create(['available_copies' => 3]);
+    $reader = Reader::factory()->create();
+    $borrowing = Borrowing::factory()->create([
+        'book_id' => $book->id,
+        'reader_id' => $reader->id,
+        'borrowed_at' => '2026-05-01',
+        'returned_at' => null,
+    ]);
+
+    $this->delete(route('borrowings.destroy', $borrowing));
+
+    expect($book->fresh()->available_copies)->toBe(3);
+});
+
+test('store rejects non-existent book', function () {
+    $reader = Reader::factory()->create();
+
+    $this->post(route('borrowings.store'), [
+        'book_id' => 999,
+        'reader_id' => $reader->id,
+        'borrowed_at' => '2026-05-26',
+    ])->assertSessionHasErrors(['book_id']);
+});
+
+test('store rejects non-existent reader', function () {
+    $book = Book::factory()->create(['available_copies' => 5]);
+
+    $this->post(route('borrowings.store'), [
+        'book_id' => $book->id,
+        'reader_id' => 999,
+        'borrowed_at' => '2026-05-26',
+    ])->assertSessionHasErrors(['reader_id']);
+});
