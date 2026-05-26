@@ -12,10 +12,41 @@ use Illuminate\View\View;
 
 class BorrowingController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Borrowing::with(['book', 'reader']);
+
+        if ($search = $request->get('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('book', fn($b) => $b->where('title', 'like', "%{$search}%"))
+                  ->orWhereHas('reader', fn($r) => $r->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($status = $request->get('status')) {
+            if ($status === 'active') {
+                $query->whereNull('returned_at');
+            } elseif ($status === 'returned') {
+                $query->whereNotNull('returned_at');
+            }
+        }
+
+        $sortField = $request->get('sort', 'borrowed_at');
+        $sortDir = $request->get('dir', 'desc');
+        $allowed = ['borrowed_at', 'returned_at'];
+        if (in_array($sortField, $allowed)) {
+            $query->orderBy($sortField, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        $perPage = min((int) $request->get('per_page', 10), 100);
+
         return view('borrowings.index', [
-            'borrowings' => Borrowing::with(['book', 'reader'])->paginate(10),
+            'borrowings' => $query->paginate($perPage)->withQueryString(),
+            'sortField' => $sortField,
+            'sortDir' => $sortDir,
+            'search' => $search,
+            'perPage' => $perPage,
+            'status' => $request->get('status'),
         ]);
     }
 

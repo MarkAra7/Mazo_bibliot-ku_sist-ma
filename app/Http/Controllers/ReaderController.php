@@ -9,9 +9,33 @@ use Illuminate\View\View;
 
 class ReaderController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('readers.index', ['readers' => Reader::paginate(10)]);
+        $query = Reader::query();
+
+        if ($search = $request->get('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $sortField = $request->get('sort', 'created_at');
+        $sortDir = $request->get('dir', 'desc');
+        $allowed = ['name', 'email', 'created_at'];
+        if (in_array($sortField, $allowed)) {
+            $query->orderBy($sortField, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        $perPage = min((int) $request->get('per_page', 10), 100);
+
+        return view('readers.index', [
+            'readers' => $query->paginate($perPage)->withQueryString(),
+            'sortField' => $sortField,
+            'sortDir' => $sortDir,
+            'search' => $search,
+            'perPage' => $perPage,
+        ]);
     }
 
     public function create(): View

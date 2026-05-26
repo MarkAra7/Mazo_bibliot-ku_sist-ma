@@ -9,9 +9,33 @@ use Illuminate\View\View;
 
 class BookController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('books.index', ['books' => Book::paginate(10)]);
+        $query = Book::query();
+
+        if ($search = $request->get('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('isbn', 'like', "%{$search}%");
+            });
+        }
+
+        $sortField = $request->get('sort', 'created_at');
+        $sortDir = $request->get('dir', 'desc');
+        $allowed = ['title', 'isbn', 'available_copies', 'created_at'];
+        if (in_array($sortField, $allowed)) {
+            $query->orderBy($sortField, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        $perPage = min((int) $request->get('per_page', 10), 100);
+
+        return view('books.index', [
+            'books' => $query->paginate($perPage)->withQueryString(),
+            'sortField' => $sortField,
+            'sortDir' => $sortDir,
+            'search' => $search,
+            'perPage' => $perPage,
+        ]);
     }
 
     public function create(): View
