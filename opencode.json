@@ -1,0 +1,24 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "mcp": {
+        "laravel-library": {
+            "type": "remote",
+            "url": "http://localhost:8000/mcp",
+            "enabled": true
+        }
+    },
+    "command": {
+        "serve": {
+            "description": "Start Laravel development server",
+            "prompt": "Run php artisan serve to start the Laravel development server at http://localhost:8000"
+        },
+        "test": {
+            "description": "Run PEST tests",
+            "prompt": "Run vendor/bin/pest to run all tests"
+        },
+        "seed": {
+            "description": "Seed the database with test data",
+            "prompt": "Run php artisan db:seed to populate the database with test data"
+        }
+    }
+}
