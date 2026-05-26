@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowingController;
+use App\Http\Controllers\ReaderController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/books');
+
+Route::resource('books', BookController::class);
+Route::resource('readers', ReaderController::class)->except(['show']);
+Route::resource('borrowings', BorrowingController::class)->except(['edit', 'update', 'show']);
+Route::patch('borrowings/{borrowing}/return', [BorrowingController::class, 'return'])->name('borrowings.return');
