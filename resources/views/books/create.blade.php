@@ -48,6 +48,46 @@
                 @enderror
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Autori</label>
+                <select name="author_ids[]" multiple size="4"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 @error('author_ids') border-red-300 bg-red-50 @enderror">
+                    @foreach ($authors as $author)
+                        <option value="{{ $author->id }}" @selected(in_array($author->id, old('author_ids', [])))>{{ $author->name }}</option>
+                    @endforeach
+                </select>
+                @error('author_ids')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Kategorijas</label>
+                <select name="category_ids[]" multiple size="4"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 @error('category_ids') border-red-300 bg-red-50 @enderror">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @selected(in_array($category->id, old('category_ids', [])))>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                @error('category_ids')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Filiāle</label>
+                <select name="branch_id"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 @error('branch_id') border-red-300 bg-red-50 @enderror">
+                    <option value="">— Nav —</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" @selected(old('branch_id') == $branch->id)>({{ $branch->address }}) {{ $branch->name }}</option>
+                    @endforeach
+                </select>
+                @error('branch_id')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="flex items-center gap-3 pt-2">
                 <button type="submit" class="btn inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-sm">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

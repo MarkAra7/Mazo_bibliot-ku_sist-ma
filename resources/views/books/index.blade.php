@@ -94,6 +94,8 @@
                                 @endif
                             </a>
                         </th>
+                        <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Autori</th>
+                        <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategorijas</th>
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">ISBN</th>
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             <a href="{{ route('books.index', array_merge(request()->query(), ['sort' => 'available_copies', 'dir' => $sortField === 'available_copies' && $sortDir === 'asc' ? 'desc' : 'asc'])) }}" class="inline-flex items-center gap-1 hover:text-indigo-600">
@@ -111,6 +113,24 @@
                         <tr class="hover:bg-slate-50/50">
                             <td class="px-5 py-4">
                                 <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-slate-800 hover:text-indigo-600">{{ $book->title }}</a>
+                            </td>
+                            <td class="px-5 py-4">
+                                <div class="text-sm text-slate-600 truncate max-w-[160px]">
+                                    @if ($book->authors->count())
+                                        {{ $book->authors->pluck('name')->join(', ') }}
+                                    @else
+                                        <span class="text-slate-300">—</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-5 py-4">
+                                <div class="text-sm text-slate-600 truncate max-w-[160px]">
+                                    @if ($book->categories->count())
+                                        {{ $book->categories->pluck('name')->join(', ') }}
+                                    @else
+                                        <span class="text-slate-300">—</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-5 py-4">
                                 <code class="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">{{ $book->isbn }}</code>
@@ -159,7 +179,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-5 py-12 text-center">
+                            <td colspan="6" class="px-5 py-12 text-center">
                                 <div class="flex flex-col items-center gap-3">
                                     <svg class="w-12 h-12 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>

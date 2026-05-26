@@ -5,6 +5,36 @@
 
 @section('content')
 <div class="fade-in">
+    @if (session('tx_info') && session('tx_info')['status'] === 'committed')
+        @php $tx = session('tx_info'); @endphp
+        <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-emerald-200 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg font-bold">&#10003;</div>
+                <div>
+                    <p class="font-semibold text-sm text-emerald-800">Transakcija: APSTIPRINĀTA (COMMIT)</p>
+                    <p class="text-xs text-emerald-600">{{ $tx['time'] }}</p>
+                </div>
+                <span class="ml-auto px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Veiksmīgi</span>
+            </div>
+            <div class="px-5 py-3 space-y-1.5 text-sm">
+                <div class="grid grid-cols-2 gap-2 pb-2 border-b border-emerald-100 mb-2">
+                    <div><span class="text-slate-500">Grāmata:</span> <span class="font-medium">{{ $tx['book'] }}</span></div>
+                    <div><span class="text-slate-500">Lasītājs:</span> <span class="font-medium">{{ $tx['reader'] }}</span></div>
+                    <div><span class="text-slate-500">Eks. pirms:</span> <span class="font-medium">{{ $tx['copies_before'] }}</span></div>
+                </div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">Izpildes soļi:</p>
+                <div class="space-y-1">
+                    @foreach ($tx['steps'] as $step)
+                        <div class="flex items-start gap-2 text-xs text-slate-600">
+                            <span class="mt-0.5 shrink-0">&#8226;</span>
+                            <span>{{ preg_replace('/^[✅]\s*\d+\.\s*/', '', $step) }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
     @php
         $total = $borrowings->total();
         $activeCount = $borrowings->whereNull('returned_at')->count();

@@ -66,25 +66,55 @@ class BorrowingController extends Controller
             'borrowed_at' => 'required|date',
         ]);
 
+        $book = Book::find($validated['book_id']);
+        $reader = Reader::find($validated['reader_id']);
+
+        $txInfo = [
+            'time' => now()->toDateTimeString(),
+            'book' => $book?->title,
+            'reader' => $reader?->name,
+            'copies_before' => $book?->available_copies,
+            'steps' => [],
+            'status' => 'pending',
+        ];
+
         try {
-            DB::transaction(function () use ($validated) {
+            DB::transaction(function () use ($validated, &$txInfo) {
+                $txInfo['steps'][] = '1. Transakcija sākta — rindas bloķēšana (lockForUpdate)';
+
                 $book = Book::lockForUpdate()->findOrFail($validated['book_id']);
+                $txInfo['copies_available'] = $book->available_copies;
+                $txInfo['steps'][] = '2. Grāmata atrasta un bloķēta: "'.$book->title.'", pieejamie eks.: '.$book->available_copies;
 
                 if ($book->available_copies <= 0) {
+                    $txInfo['steps'][] = '❌ 3. Pārbaude neizdevās — nav pieejamu eksemplāru. Transakcija atcelta (ROLLBACK).';
+                    $txInfo['status'] = 'rolled_back';
                     throw new \RuntimeException('Nav pieejamu eksemplāru.');
                 }
+
+                $txInfo['steps'][] = '✅ 3. Pārbaude veiksmīga — eksemplāri pieejami ('.$book->available_copies.')';
 
                 Borrowing::create([
                     'book_id' => $validated['book_id'],
                     'reader_id' => $validated['reader_id'],
                     'borrowed_at' => $validated['borrowed_at'],
                 ]);
+
+                $txInfo['steps'][] = '4. Aizņēmuma ieraksts izveidots';
+                $txInfo['steps'][] = '5. Trigeris samazina available_copies → '.($book->available_copies - 1);
+                $txInfo['steps'][] = '✅ Transakcija apstiprināta (COMMIT)';
+                $txInfo['status'] = 'committed';
             });
         } catch (\RuntimeException $e) {
-            return back()->withErrors(['book_id' => $e->getMessage()])->withInput();
+            return back()
+                ->withErrors(['book_id' => $e->getMessage()])
+                ->withInput()
+                ->with('tx_info', $txInfo);
         }
 
-        return redirect()->route('borrowings.index')->with('success', 'Aizņēmums reģistrēts!');
+        return redirect()->route('borrowings.index')
+            ->with('success', 'Aizņēmums reģistrēts!')
+            ->with('tx_info', $txInfo);
     }
 
     public function return(Borrowing $borrowing): RedirectResponse

@@ -57,6 +57,34 @@
                         </dd>
                     </div>
                     <div>
+                        <dt class="text-xs font-medium text-slate-400 uppercase">Autori</dt>
+                        <dd class="mt-1 text-sm text-slate-800">
+                            @if ($book->authors->count())
+                                @foreach ($book->authors as $author)
+                                    <span class="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-medium mr-1">{{ $author->name }}</span>
+                                @endforeach
+                            @else
+                                <span class="text-slate-400">—</span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400 uppercase">Kategorijas</dt>
+                        <dd class="mt-1 text-sm text-slate-800">
+                            @if ($book->categories->count())
+                                @foreach ($book->categories as $category)
+                                    <span class="inline-block bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-medium mr-1">{{ $category->name }}</span>
+                                @endforeach
+                            @else
+                                <span class="text-slate-400">—</span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400 uppercase">Filiāle</dt>
+                        <dd class="mt-1 text-sm text-slate-800">{{ $book->branch?->name ?? '—' }}</dd>
+                    </div>
+                    <div>
                         <dt class="text-xs font-medium text-slate-400 uppercase">Izveidots</dt>
                         <dd class="mt-1 text-sm text-slate-600">{{ $book->created_at->format('d.m.Y H:i') }}</dd>
                     </div>

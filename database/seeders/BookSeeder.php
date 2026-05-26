@@ -2,13 +2,20 @@
 
 namespace Database\Seeders;
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Branch;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder
 {
     public function run(): void
     {
+        $authors = Author::all();
+        $categories = Category::all();
+        $branches = Branch::all();
+
         $books = [
             ['title' => 'Cilvēka prāts', 'isbn' => '9789984380001', 'available_copies' => 3],
             ['title' => 'Trīs draugi', 'isbn' => '9789984380002', 'available_copies' => 2],
@@ -42,8 +49,15 @@ class BookSeeder extends Seeder
             ['title' => 'Noslēpumu sala', 'isbn' => '9789984380030', 'available_copies' => 3],
         ];
 
-        foreach ($books as $book) {
-            Book::firstOrCreate(['isbn' => $book['isbn']], $book);
+        foreach ($books as $i => $data) {
+            $book = Book::firstOrCreate(
+                ['isbn' => $data['isbn']],
+                ['title' => $data['title'], 'available_copies' => $data['available_copies']]
+            );
+
+            $book->branch()->associate($branches->random())->save();
+            $book->authors()->sync([$authors[$i % $authors->count()]->id]);
+            $book->categories()->sync([$categories[$i % $categories->count()]->id]);
         }
     }
 }
