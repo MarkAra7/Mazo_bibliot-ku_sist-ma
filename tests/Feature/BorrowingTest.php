@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('index displays borrowings', function () {
-    $book = Book::factory()->create();
+    $book = Book::factory()->create(['available_copies' => 5]);
     $reader = Reader::factory()->create();
     Borrowing::factory()->count(3)->create([
         'book_id' => $book->id,
