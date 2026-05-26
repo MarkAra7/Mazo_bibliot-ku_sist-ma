@@ -1,0 +1,34 @@
+{
+  "name": "Mazo bibliotēku sistēma",
+  "short_name": "Bibliotēka",
+  "description": "Bibliotēkas pārvaldības sistēma — grāmatas, lasītāji, aizņēmumi",
+  "start_url": "/mobile",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#4338ca",
+  "orientation": "portrait",
+  "lang": "lv",
+  "icons": [
+    {
+      "src": "/images/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "books", "libraries"],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
