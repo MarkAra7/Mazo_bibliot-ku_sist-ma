@@ -87,9 +87,10 @@ class TestBookIndex extends Command
 
         $authorIds = DB::table('authors')->pluck('id')->toArray();
         $categoryIds = DB::table('categories')->pluck('id')->toArray();
+        $branchIds = DB::table('branches')->pluck('id')->toArray();
 
-        if (empty($authorIds) || empty($categoryIds)) {
-            $this->error('Trūkst autoru vai kategoriju! Vispirms izpildi db:seed.');
+        if (empty($authorIds) || empty($categoryIds) || empty($branchIds)) {
+            $this->error('Trūkst autoru, kategoriju vai filiāļu! Vispirms izpildi db:seed.');
             return;
         }
 
@@ -107,6 +108,7 @@ class TestBookIndex extends Command
             $rows[] = [
                 'title' => $title,
                 'isbn' => $isbn,
+                'branch_id' => $branchIds[array_rand($branchIds)],
                 'available_copies' => rand(0, 5),
                 'created_at' => now(),
                 'updated_at' => now(),
