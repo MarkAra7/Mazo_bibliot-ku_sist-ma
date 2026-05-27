@@ -85,4 +85,19 @@ class LibraryService
             ->limit($limit)
             ->get();
     }
+
+    public function calculateReaderFine(int $readerId): array
+    {
+        $rows = DB::select(
+            'SELECT * FROM reader_fines WHERE reader_id = ?',
+            [$readerId]
+        );
+
+        return [
+            'reader_id' => $readerId,
+            'items' => $rows,
+            'total_fine' => array_sum(array_column($rows, 'fine_amount')),
+            'overdue_count' => count($rows),
+        ];
+    }
 }

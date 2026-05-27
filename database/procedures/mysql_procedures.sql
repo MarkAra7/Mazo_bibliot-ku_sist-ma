@@ -99,3 +99,24 @@ BEGIN
     LIMIT p_limit;
 END //
 DELIMITER ;
+
+-- 5. Procedūra: lasītāja soda naudas aprēķins (0.50 EUR par kavēto dienu)
+DELIMITER //
+CREATE PROCEDURE CalculateReaderFine(
+    IN p_reader_id INT,
+    OUT p_total_fine DECIMAL(10,2),
+    OUT p_overdue_count INT
+)
+BEGIN
+    SELECT
+        COALESCE(SUM(
+            DATEDIFF(CURDATE(), DATE_ADD(bw.borrowed_at, INTERVAL 14 DAY)) * 0.50
+        ), 0),
+        COUNT(*)
+    INTO p_total_fine, p_overdue_count
+    FROM borrowings bw
+    WHERE bw.reader_id = p_reader_id
+      AND bw.returned_at IS NULL
+      AND DATE_ADD(bw.borrowed_at, INTERVAL 14 DAY) < CURDATE();
+END //
+DELIMITER ;
