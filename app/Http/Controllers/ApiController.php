@@ -71,10 +71,16 @@ class ApiController extends Controller
         try {
             DB::transaction(function () use ($validated, &$borrowing) {
                 $book = Book::lockForUpdate()->findOrFail($validated['book_id']);
+                $reader = Reader::lockForUpdate()->findOrFail($validated['reader_id']);
+                if ($reader->hasUnpaidFines()) {
+                    throw new \RuntimeException('Lasītājam ir neapmaksāti sodi — aizņēmums nav iespējams.');
+                }
                 if ($book->available_copies <= 0) {
                     throw new \RuntimeException('Nav pieejamu eksemplāru.');
                 }
-                $borrowing = Borrowing::create($validated);
+                $borrowing = Borrowing::create($validated + [
+                    'due_date' => date('Y-m-d', strtotime($validated['borrowed_at'] . ' + 30 days')),
+                ]);
             });
         } catch (\RuntimeException $e) {
             return response()->json(['error' => $e->getMessage()], 422);

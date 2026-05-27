@@ -83,8 +83,15 @@ class BorrowingController extends Controller
                 $txInfo['steps'][] = '1. Transakcija sākta — rindas bloķēšana (lockForUpdate)';
 
                 $book = Book::lockForUpdate()->findOrFail($validated['book_id']);
+                $reader = Reader::lockForUpdate()->findOrFail($validated['reader_id']);
                 $txInfo['copies_available'] = $book->available_copies;
                 $txInfo['steps'][] = '2. Grāmata atrasta un bloķēta: "'.$book->title.'", pieejamie eks.: '.$book->available_copies;
+
+                if ($reader->hasUnpaidFines()) {
+                    $txInfo['steps'][] = '❌ Lasītājam ir neapmaksāti sodi. Aizņēmums bloķēts.';
+                    $txInfo['status'] = 'rolled_back';
+                    throw new \RuntimeException('Lasītājam ir neapmaksāti sodi — aizņēmums nav iespējams.');
+                }
 
                 if ($book->available_copies <= 0) {
                     $txInfo['steps'][] = '❌ 3. Pārbaude neizdevās — nav pieejamu eksemplāru. Transakcija atcelta (ROLLBACK).';

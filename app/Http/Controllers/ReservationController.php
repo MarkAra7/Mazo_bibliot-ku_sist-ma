@@ -95,6 +95,7 @@ class ReservationController extends Controller
             'book_id' => $reservation->book_id,
             'reader_id' => $reservation->reader_id,
             'borrowed_at' => now()->toDateString(),
+            'due_date' => now()->addDays(30)->toDateString(),
         ]);
 
         $reservation->update([

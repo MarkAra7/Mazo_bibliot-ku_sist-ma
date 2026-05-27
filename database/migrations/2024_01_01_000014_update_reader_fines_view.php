@@ -20,14 +20,15 @@ return new class extends Migration
                     b.id AS borrowing_id,
                     bo.title AS book_title,
                     b.borrowed_at,
-                    (b.borrowed_at + INTERVAL '14 days')::DATE AS due_date,
-                    (CURRENT_DATE - b.borrowed_at - 14) AS days_overdue,
-                    ROUND((CURRENT_DATE - b.borrowed_at - 14) * 0.50, 2) AS fine_amount
+                    b.due_date,
+                    (CURRENT_DATE - b.due_date) AS days_overdue,
+                    ROUND((CURRENT_DATE - b.due_date) * 0.50, 2) AS fine_amount
                 FROM readers r
                 JOIN borrowings b ON b.reader_id = r.id
                 JOIN books bo ON bo.id = b.book_id
                 WHERE b.returned_at IS NULL
-                  AND (CURRENT_DATE - b.borrowed_at) > 14
+                  AND b.due_date IS NOT NULL
+                  AND CURRENT_DATE > b.due_date
             ");
         } else {
             DB::statement("
@@ -38,14 +39,15 @@ return new class extends Migration
                     b.id AS borrowing_id,
                     bo.title AS book_title,
                     b.borrowed_at,
-                    date(b.borrowed_at, '+14 days') AS due_date,
-                    CAST(julianday('now') - julianday(b.borrowed_at) - 14 AS INTEGER) AS days_overdue,
-                    round(CAST(julianday('now') - julianday(b.borrowed_at) - 14 AS INTEGER) * 0.50, 2) AS fine_amount
+                    b.due_date,
+                    CAST(julianday('now') - julianday(b.due_date) AS INTEGER) AS days_overdue,
+                    round(CAST(julianday('now') - julianday(b.due_date) AS INTEGER) * 0.50, 2) AS fine_amount
                 FROM readers r
                 JOIN borrowings b ON b.reader_id = r.id
                 JOIN books bo ON bo.id = b.book_id
                 WHERE b.returned_at IS NULL
-                  AND julianday('now') - julianday(b.borrowed_at) > 14
+                  AND b.due_date IS NOT NULL
+                  AND date('now') > b.due_date
             ");
         }
     }

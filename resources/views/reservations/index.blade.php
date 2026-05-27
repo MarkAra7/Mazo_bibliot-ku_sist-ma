@@ -36,12 +36,12 @@
                                 <a href="{{ route('books.show', $reservation->book) }}" class="text-sm font-medium text-slate-800 hover:text-indigo-600">{{ $reservation->book->title }}</a>
                             </td>
                             <td class="px-5 py-4">
-                                <div class="flex items-center gap-2">
+                                <a href="{{ route('readers.show', $reservation->reader) }}" class="flex items-center gap-2 hover:opacity-80">
                                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white text-xs font-medium">
                                         {{ Str::substr($reservation->reader->name, 0, 1) }}
                                     </div>
                                     <span class="text-sm text-slate-600">{{ $reservation->reader->name }}</span>
-                                </div>
+                                </a>
                             </td>
                             <td class="px-5 py-4 text-sm text-slate-600">{{ $reservation->reserved_at->format('d.m.Y') }}</td>
                             <td class="px-5 py-4">

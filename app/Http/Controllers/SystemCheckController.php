@@ -9,8 +9,21 @@ class SystemCheckController extends Controller
 {
     public function index(): View
     {
-        $triggers = DB::select("SELECT name, sql FROM sqlite_master WHERE type = 'trigger' ORDER BY name");
-        $views = DB::select("SELECT name, sql FROM sqlite_master WHERE type = 'view' ORDER BY name");
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            $triggers = DB::select("
+                SELECT tgname AS name, pg_get_triggerdef(tg.oid) AS sql
+                FROM pg_trigger tg
+                JOIN pg_class c ON c.oid = tg.tgrelid
+                WHERE NOT tg.tgisinternal
+                ORDER BY tgname
+            ");
+            $views = DB::select("SELECT schemaname || '.' || viewname AS name, definition AS sql FROM pg_views WHERE schemaname NOT IN ('pg_catalog', 'information_schema') ORDER BY viewname");
+        } else {
+            $triggers = DB::select("SELECT name, sql FROM sqlite_master WHERE type = 'trigger' ORDER BY name");
+            $views = DB::select("SELECT name, sql FROM sqlite_master WHERE type = 'view' ORDER BY name");
+        }
         $recentLog = DB::table('book_log')
             ->join('books', 'book_log.book_id', '=', 'books.id')
             ->select('book_log.*', 'books.title as book_title')

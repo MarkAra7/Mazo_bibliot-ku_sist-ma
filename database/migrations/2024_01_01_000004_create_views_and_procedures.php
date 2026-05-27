@@ -7,8 +7,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        DB::statement('DROP VIEW IF EXISTS active_borrowings');
+
         DB::statement("
-            CREATE VIEW IF NOT EXISTS active_borrowings AS
+            CREATE VIEW active_borrowings AS
             SELECT
                 b.id AS borrowing_id,
                 bo.title AS book_title,

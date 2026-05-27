@@ -61,7 +61,7 @@
                         <dd class="mt-1 text-sm text-slate-800">
                             @if ($book->authors->count())
                                 @foreach ($book->authors as $author)
-                                    <span class="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-medium mr-1">{{ $author->name }}</span>
+                                    <a href="{{ route('authors.show', $author) }}" class="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-medium mr-1 hover:bg-indigo-100">{{ $author->name }}</a>
                                 @endforeach
                             @else
                                 <span class="text-slate-400">—</span>
@@ -114,7 +114,7 @@
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($book->borrowings()->with('reader')->latest('borrowed_at')->get() as $borrowing)
                                 <tr class="hover:bg-slate-50/50">
-                                    <td class="px-5 py-4 text-sm font-medium text-slate-800">{{ $borrowing->reader->name }}</td>
+                                    <td class="px-5 py-4 text-sm font-medium"><a href="{{ route('readers.show', $borrowing->reader) }}" class="text-slate-800 hover:text-indigo-600">{{ $borrowing->reader->name }}</a></td>
                                     <td class="px-5 py-4 text-sm text-slate-600">{{ $borrowing->borrowed_at->format('d.m.Y') }}</td>
                                     <td class="px-5 py-4 text-sm text-slate-600">{{ $borrowing->returned_at ? $borrowing->returned_at->format('d.m.Y') : '—' }}</td>
                                     <td class="px-5 py-4">

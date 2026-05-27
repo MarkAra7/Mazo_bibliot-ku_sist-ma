@@ -50,12 +50,12 @@
                     @forelse ($fines as $fine)
                         <tr class="hover:bg-slate-50/50">
                             <td class="px-5 py-4">
-                                <div class="flex items-center gap-2">
+                                <a href="{{ route('readers.show', $fine->reader) }}" class="flex items-center gap-2 hover:opacity-80">
                                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white text-xs font-medium">
                                         {{ Str::substr($fine->reader->name, 0, 1) }}
                                     </div>
                                     <span class="text-sm text-slate-600">{{ $fine->reader->name }}</span>
-                                </div>
+                                </a>
                             </td>
                             <td class="px-5 py-4 text-sm text-slate-600">{{ $fine->borrowing->book->title }}</td>
                             <td class="px-5 py-4 text-sm font-medium text-slate-800">&euro;{{ number_format($fine->amount, 2) }}</td>

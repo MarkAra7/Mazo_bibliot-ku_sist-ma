@@ -38,6 +38,12 @@ class AuthorController extends Controller
         ]);
     }
 
+    public function show(Author $author): View
+    {
+        $author->load('books');
+        return view('authors.show', ['author' => $author]);
+    }
+
     public function create(): View
     {
         return view('authors.create');

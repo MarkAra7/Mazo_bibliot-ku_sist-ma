@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
 Route::resource('books', BookController::class);
-Route::resource('readers', ReaderController::class)->except(['show']);
+Route::resource('readers', ReaderController::class);
 Route::resource('borrowings', BorrowingController::class)->except(['edit', 'update', 'show']);
 Route::patch('borrowings/{borrowing}/return', [BorrowingController::class, 'return'])->name('borrowings.return');
 
-Route::resource('authors', AuthorController::class)->except(['show']);
+Route::resource('authors', AuthorController::class);
 Route::resource('categories', CategoryController::class)->except(['show']);
 Route::resource('branches', BranchController::class)->except(['show']);
 Route::resource('reservations', ReservationController::class)->only(['index', 'create', 'store', 'destroy']);

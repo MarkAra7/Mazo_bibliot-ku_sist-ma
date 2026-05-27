@@ -15,4 +15,14 @@ class Reader extends Model
     {
         return $this->hasMany(Borrowing::class);
     }
+
+    public function fines(): HasMany
+    {
+        return $this->hasMany(Fine::class);
+    }
+
+    public function hasUnpaidFines(): bool
+    {
+        return $this->fines()->whereNull('paid_at')->exists();
+    }
 }

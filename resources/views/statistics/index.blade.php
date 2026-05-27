@@ -109,7 +109,7 @@
                         @foreach ($mostActiveReaders as $i => $reader)
                             <tr class="hover:bg-slate-50/50">
                                 <td class="px-5 py-3 text-sm text-slate-400">{{ $i + 1 }}</td>
-                                <td class="px-5 py-3 text-sm font-medium text-slate-800">{{ $reader->name }}</td>
+                                <td class="px-5 py-3 text-sm font-medium"><a href="{{ route('readers.show', $reader) }}" class="text-slate-800 hover:text-indigo-600">{{ $reader->name }}</a></td>
                                 <td class="px-5 py-3 text-sm text-right font-semibold text-indigo-600">{{ $reader->borrowings_count }}</td>
                             </tr>
                         @endforeach

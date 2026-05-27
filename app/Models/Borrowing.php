@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Borrowing extends Model
 {
     use HasFactory;
-    protected $fillable = ['book_id', 'reader_id', 'borrowed_at', 'returned_at'];
+    protected $fillable = ['book_id', 'reader_id', 'borrowed_at', 'due_date', 'returned_at'];
 
     protected $casts = [
         'borrowed_at' => 'date',
+        'due_date' => 'date',
         'returned_at' => 'date',
     ];
 

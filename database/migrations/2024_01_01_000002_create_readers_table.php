@@ -19,20 +19,44 @@ return new class extends Migration
             $table->index('email');
         });
 
-        DB::statement('
-            CREATE TRIGGER IF NOT EXISTS trg_readers_after_insert
-            AFTER INSERT ON readers
-            BEGIN
-                UPDATE readers SET created_at = COALESCE(NEW.created_at, datetime(\'now\')),
-                                   updated_at = datetime(\'now\')
-                WHERE rowid = NEW.rowid;
-            END
-        ');
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement('
+                CREATE OR REPLACE FUNCTION set_reader_timestamps()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    NEW.created_at = COALESCE(NEW.created_at, NOW());
+                    NEW.updated_at = NOW();
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql
+            ');
+            DB::statement('
+                CREATE TRIGGER trg_readers_after_insert
+                BEFORE INSERT ON readers
+                FOR EACH ROW
+                EXECUTE FUNCTION set_reader_timestamps()
+            ');
+        } else {
+            DB::statement('
+                CREATE TRIGGER IF NOT EXISTS trg_readers_after_insert
+                AFTER INSERT ON readers
+                BEGIN
+                    UPDATE readers SET created_at = COALESCE(NEW.created_at, datetime(\'now\')),
+                                       updated_at = datetime(\'now\')
+                    WHERE rowid = NEW.rowid;
+                END
+            ');
+        }
     }
 
     public function down(): void
     {
         DB::statement('DROP TRIGGER IF EXISTS trg_readers_after_insert');
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('DROP FUNCTION IF EXISTS set_reader_timestamps CASCADE');
+        }
         Schema::dropIfExists('readers');
     }
 };

@@ -12,39 +12,39 @@
     @endphp
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="bg-surface rounded-2xl border border-dark-700/50 p-5">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-slate-500 font-medium">Kopā grāmatas</p>
-                    <p class="text-3xl font-bold text-slate-800 mt-1">{{ $total }}</p>
+                    <p class="text-sm text-dark-400 font-medium">Kopā grāmatas</p>
+                    <p class="text-3xl font-bold text-dark-100 mt-1">{{ $total }}</p>
                 </div>
-                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
                     </svg>
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="bg-surface rounded-2xl border border-dark-700/50 p-5">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-slate-500 font-medium">Pieejami eksemplāri</p>
+                    <p class="text-sm text-dark-400 font-medium">Pieejami eksemplāri</p>
                     <p class="text-3xl font-bold text-emerald-600 mt-1">{{ $available }}</p>
                 </div>
-                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="bg-surface rounded-2xl border border-dark-700/50 p-5">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-slate-500 font-medium">Aizņemtas</p>
+                    <p class="text-sm text-dark-400 font-medium">Aizņemtas</p>
                     <p class="text-3xl font-bold text-amber-600 mt-1">{{ $borrowed }}</p>
                 </div>
-                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
                     </svg>
@@ -56,13 +56,13 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <form method="GET" action="{{ route('books.index') }}" class="flex flex-wrap items-center gap-3 w-full">
             <div class="relative flex-1 min-w-[200px] max-w-md">
-                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg class="w-5 h-5 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                 </svg>
                 <input type="text" name="q" value="{{ $search ?? '' }}" placeholder="Meklēt pēc nosaukuma vai ISBN..."
-                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
+                    class="w-full pl-10 pr-4 py-2.5 bg-dark-800 border border-dark-600 rounded-xl text-sm text-dark-100 placeholder:text-dark-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500">
             </div>
-            <select name="per_page" onchange="this.form.submit()" class="px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
+            <select name="per_page" onchange="this.form.submit()" class="px-3 py-2.5 bg-dark-800 border border-dark-600 rounded-xl text-sm text-dark-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500">
                 <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
                 <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
                 <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
@@ -81,13 +81,13 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-surface rounded-2xl border border-dark-700/50 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            <a href="{{ route('books.index', array_merge(request()->query(), ['sort' => 'title', 'dir' => $sortField === 'title' && $sortDir === 'asc' ? 'desc' : 'asc'])) }}" class="inline-flex items-center gap-1 hover:text-indigo-600">
+                            <a href="{{ route('books.index', array_merge(request()->query(), ['sort' => 'title', 'dir' => $sortField === 'title' && $sortDir === 'asc' ? 'desc' : 'asc'])) }}" class="inline-flex items-center gap-1 hover:text-indigo-400">
                                 Nosaukums
                                 @if ($sortField === 'title')
                                     <svg class="w-3 h-3 {{ $sortDir === 'asc' ? '' : 'rotate-180' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
@@ -98,7 +98,7 @@
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategorijas</th>
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">ISBN</th>
                         <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            <a href="{{ route('books.index', array_merge(request()->query(), ['sort' => 'available_copies', 'dir' => $sortField === 'available_copies' && $sortDir === 'asc' ? 'desc' : 'asc'])) }}" class="inline-flex items-center gap-1 hover:text-indigo-600">
+                            <a href="{{ route('books.index', array_merge(request()->query(), ['sort' => 'available_copies', 'dir' => $sortField === 'available_copies' && $sortDir === 'asc' ? 'desc' : 'asc'])) }}" class="inline-flex items-center gap-1 hover:text-indigo-400">
                                 Pieejamie eks.
                                 @if ($sortField === 'available_copies')
                                     <svg class="w-3 h-3 {{ $sortDir === 'asc' ? '' : 'rotate-180' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
@@ -112,12 +112,15 @@
                     @forelse ($books as $book)
                         <tr class="hover:bg-slate-50/50">
                             <td class="px-5 py-4">
-                                <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-slate-800 hover:text-indigo-600">{{ $book->title }}</a>
+                                <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-slate-800 hover:text-indigo-400">{{ $book->title }}</a>
                             </td>
                             <td class="px-5 py-4">
                                 <div class="text-sm text-slate-600 truncate max-w-[160px]">
                                     @if ($book->authors->count())
-                                        {{ $book->authors->pluck('name')->join(', ') }}
+                                        @foreach ($book->authors as $i => $author)
+                                            @if ($i > 0), @endif
+                                            <a href="{{ route('authors.show', $author) }}" class="hover:text-indigo-400">{{ $author->name }}</a>
+                                        @endforeach
                                     @else
                                         <span class="text-slate-300">—</span>
                                     @endif
@@ -155,7 +158,7 @@
                             </td>
                             <td class="px-5 py-4">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('books.show', $book) }}" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" title="Skatīt">
+                                    <a href="{{ route('books.show', $book) }}" class="p-2 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-50 transition-colors" title="Skatīt">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

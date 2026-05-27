@@ -38,6 +38,20 @@ class ReaderController extends Controller
         ]);
     }
 
+    public function show(Reader $reader): View
+    {
+        $reader->load(['borrowings.book', 'fines.borrowing.book']);
+
+        $unpaidFines = $reader->fines->whereNull('paid_at');
+        $totalUnpaid = $unpaidFines->sum('amount');
+
+        return view('readers.show', [
+            'reader' => $reader,
+            'unpaidFines' => $unpaidFines,
+            'totalUnpaid' => $totalUnpaid,
+        ]);
+    }
+
     public function create(): View
     {
         return view('readers.create');
