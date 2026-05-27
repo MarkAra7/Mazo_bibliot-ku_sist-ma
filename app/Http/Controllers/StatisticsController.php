@@ -44,8 +44,8 @@ class StatisticsController extends Controller
             ->orderBy('month')
             ->get();
         
-        $booksByCategory = DB::table('category_book')
-            ->join('categories', 'category_book.category_id', '=', 'categories.id')
+        $booksByCategory = DB::table('book_category')
+            ->join('categories', 'book_category.category_id', '=', 'categories.id')
             ->select('categories.name', DB::raw('count(*) as total'))
             ->groupBy('categories.name')
             ->orderBy('total', 'desc')

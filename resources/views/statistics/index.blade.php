@@ -50,7 +50,7 @@
     </div>
     
     <!-- Charts row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Aizņēmumi pa mēnešiem</h3>
             <canvas id="monthlyChart" height="200"></canvas>
@@ -58,6 +58,10 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Grāmatas pa kategorijām</h3>
             <canvas id="categoryChart" height="200"></canvas>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Grāmatas pa filiālēm</h3>
+            <canvas id="branchChart" height="200"></canvas>
         </div>
     </div>
     
@@ -140,11 +144,36 @@ document.addEventListener('DOMContentLoaded', function () {
                     borderColor: 'rgb(99, 102, 241)',
                     borderWidth: 1,
                     borderRadius: 4,
+                    maxBarThickness: 50,
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    }
+    
+    if (document.getElementById('branchChart')) {
+        new Chart(document.getElementById('branchChart'), {
+            type: 'bar',
+            data: {
+                labels: branchData.map(d => d.branch?.name ?? 'Nezināma'),
+                datasets: [{
+                    label: 'Grāmatas',
+                    data: branchData.map(d => d.total),
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: 'rgb(16, 185, 129)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    maxBarThickness: 50,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
             }
@@ -169,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 12 } } }
             }
         });
